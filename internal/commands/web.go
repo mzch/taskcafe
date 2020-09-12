@@ -61,8 +61,12 @@ func newWebCmd() *cobra.Command {
 				}
 			}
 
-			log.WithFields(log.Fields{"url": viper.GetString("server.hostname")}).Info("starting server")
-			r, _ := route.NewRouter(db)
+			var url string
+			url = viper.GetString("url.public")
+			if url == "" {
+				url = "http://localhost:3333"
+			}
+			log.WithFields(log.Fields{"url": url, "listen": viper.GetString("server.hostname")}).Info("starting server")			r, _ := route.NewRouter(db)
 			http.ListenAndServe(viper.GetString("server.hostname"), r)
 			return nil
 		},

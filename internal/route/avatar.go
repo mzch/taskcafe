@@ -12,6 +12,8 @@ import (
 
 	"time"
 
+	"github.com/spf13/viper"
+
 	"github.com/jordanknott/taskcafe/internal/db"
 	"github.com/jordanknott/taskcafe/internal/frontend"
 	"github.com/jordanknott/taskcafe/internal/utils"
@@ -61,9 +63,12 @@ func (h *TaskcafeHandler) ProfileImageUpload(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	h.repo.UpdateUserAccountProfileAvatarURL(r.Context(), db.UpdateUserAccountProfileAvatarURLParams{UserID: userID, ProfileAvatarUrl: sql.NullString{String: "http://localhost:3333/uploads/" + handler.Filename, Valid: true}})
+	url := viper.GetString("url.public")
+	if url == "" {
+		url = "http://localhost:3333"
+	}
+	h.repo.UpdateUserAccountProfileAvatarURL(r.Context(), db.UpdateUserAccountProfileAvatarURLParams{UserID: userID, ProfileAvatarUrl: sql.NullString{String: url + "/uploads/" + handler.Filename, Valid: true}})
 	// return that we have successfully uploaded our file!
 	log.Info("file uploaded")
-	json.NewEncoder(w).Encode(AvatarUploadResponseData{URL: "http://localhost:3333/uploads/" + handler.Filename, UserID: userID.String()})
-
+	json.NewEncoder(w).Encode(AvatarUploadResponseData{URL: url + "/uploads/" + handler.Filename, UserID: userID.String()})
 }

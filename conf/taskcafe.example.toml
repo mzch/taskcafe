@@ -1,5 +1,8 @@
-[general]
-host = '0.0.0.0:3333'
+[server]
+hostname = '0.0.0.0:3333'
+
+[url]
+public = 'http://localhost:3333'
 
 [email_notifications]
 enabled = true
@@ -22,3 +25,7 @@ password = 'example'
 server = 'mail.example.com'
 port = 465
 connection_security = 'STARTTLS'
+
+[queue]
+broker = 'amqp://guest:guest@localhost:5672/'
+store = 'memcache://localhost:11211'
